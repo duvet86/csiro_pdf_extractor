@@ -1,12 +1,12 @@
 from contextlib import asynccontextmanager
 import select
 
-from fastapi import Depends, FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.params import Query
-from sqlmodel import Sequence, Session, select
+from sqlmodel import Sequence, select
 from typing import Annotated, Sequence
 
-from data.database import Job, create_db_and_tables, get_session
+from data.database import Job, SessionDep, create_db_and_tables
 import simple_extraction
 import advanced_extraction
 
@@ -14,8 +14,6 @@ import advanced_extraction
 async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
-
-SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI(lifespan=lifespan)
 

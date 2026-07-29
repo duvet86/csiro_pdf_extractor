@@ -1,30 +1,20 @@
 from datetime import datetime
-from typing import Optional
+from typing import Annotated
 
+from fastapi.params import Depends
 from sqlmodel import Column, Field, Relationship, SQLModel, TIMESTAMP, Session, create_engine, text
-
-# class Job(SQLModel, table=True):
-#     id: int | None = Field(default=None, primary_key=True)
-#     created_datetime: Optional[datetime] = Field(sa_column=Column(
-#         TIMESTAMP(timezone=True),
-#         nullable=False,
-#         server_default=text("CURRENT_TIMESTAMP"),
-#     ))
-#     updated_datetime: Optional[datetime] = Field(sa_column=Column(
-#         TIMESTAMP(timezone=True),
-#         nullable=False,
-#         server_default=text("CURRENT_TIMESTAMP"),
-#         server_onupdate=text("CURRENT_TIMESTAMP"),
-#     ))
 
 class Job(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
-    created_datetime: Optional[datetime] = Field(sa_column=Column(
+    file_name: str
+    num_pages: int
+
+    created_datetime: datetime | None = Field(default=None, sa_column=Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         server_default=text("CURRENT_TIMESTAMP"),
     ))
-    updated_datetime: Optional[datetime] = Field(sa_column=Column(
+    updated_datetime: datetime | None = Field(default=None, sa_column=Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         server_default=text("CURRENT_TIMESTAMP"),
@@ -33,18 +23,18 @@ class Job(SQLModel, table=True):
 
     extracted_data: list["ExtractedData"] = Relationship(back_populates="job")
 
-
 class ExtractedData(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     page_number: int
     key: str = Field(index=True)
     value: str
-    created_datetime: Optional[datetime] = Field(sa_column=Column(
+
+    created_datetime: datetime | None = Field(default=None, sa_column=Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         server_default=text("CURRENT_TIMESTAMP"),
     ))
-    updated_datetime: Optional[datetime] = Field(sa_column=Column(
+    updated_datetime: datetime | None = Field(default=None, sa_column=Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         server_default=text("CURRENT_TIMESTAMP"),
@@ -66,6 +56,8 @@ def create_db_and_tables():
 def get_session():
     with Session(engine) as session:
         yield session
+
+SessionDep = Annotated[Session, Depends(get_session)]
 
 # app = FastAPI()
 
