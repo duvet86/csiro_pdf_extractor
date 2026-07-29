@@ -60,32 +60,39 @@ def extract_data(session: SessionDep, job_id: int, pdf_bytes: bytes):
     print(f"Starting heavy computation task for job_id: {job_id}")  
 
     buf = BytesIO(pdf_bytes)
-    source = DocumentStream(name="my_doc.pdf", stream=buf)
 
-    extracted = extractor.extract(
-        source=source,
-        template='{"retailer": "string", "billing_period": "string", "total_cost": "float", "total_usage_kWh": "float"}',
-    )
-
-    job = session.get(Job, job_id)
-    if not job:
-        raise Exception(f"Job with ID {job_id} not found in the database.")
-
-    job.num_pages = len(extracted.pages) if extracted.pages else 0
-
-    for i, (key, value) in enumerate(extracted.model_dump(), start=1):
-        if value is not None:
-            session.add(
-                ExtractedData(
-                    page_number=i,
-                    key=key,
-                    value=value,
-                    job=job
-                )
-            )
-
-    job.status = "success"
-
-    session.commit()
+    try:
+        source = DocumentStream(name="my_doc.pdf", stream=buf)
+        
+        extracted = extractor.extract(
+            source=source,
+            template='{"retailer": "string", "billing_period": "string", "total_cost": "float", "total_usage_kWh": "float"}',
+        )
+    
+        job = session.get(Job, job_id)
+        if not job:
+            raise Exception(f"Job with ID {job_id} not found in the database.")
+    
+        job.num_pages = len(extracted.pages) if extracted.pages else 0
+    
+        # print(extracted)
+    
+        for extracted_page_data in extracted.pages:
+            for key, value in extracted_page_data.extracted_data.items():
+                if value is not None:
+                    session.add(
+                        ExtractedData(
+                            page_number=extracted_page_data.page_no,
+                            key=key,
+                            value=str(value),
+                            job=job
+                        )
+                    )
+    
+        job.status = "success"
+    
+        session.commit()
+    finally:
+        buf.close()
 
     print(f"Completed heavy computation task for job_id: {job_id}")

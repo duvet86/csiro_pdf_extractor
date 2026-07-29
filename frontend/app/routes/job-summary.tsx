@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import type { Route } from "./+types/job-summary";
 
 interface Job {
@@ -37,6 +38,7 @@ export default function Index({ loaderData: { jobs } }: Route.ComponentProps) {
               <th>File Name</th>
               <th>Number of Pages</th>
               <th>Status</th>
+              <th>Details</th>
             </tr>
           </thead>
           <tbody>
@@ -46,6 +48,15 @@ export default function Index({ loaderData: { jobs } }: Route.ComponentProps) {
                 <td>{job.file_name}</td>
                 <td>{job.num_pages}</td>
                 <td>{job.status}</td>
+                <td>
+                  {job.status === "success" ? (
+                    <Link to={`/job-details/${job.id}`} className="link">
+                      Details
+                    </Link>
+                  ) : (
+                    "-"
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
