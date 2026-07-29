@@ -7,7 +7,7 @@ from data.database import Job, ExtractedData, SessionDep
 
 # Initialize the router with specific configuration (optional)
 router = APIRouter(
-    prefix="/extract-pdf-simple"
+    prefix="/simple-extraction"
 )
 
 @router.post("")
@@ -27,7 +27,7 @@ async def extract_pdf_text(session: SessionDep, file: UploadFile = File(...)):
         pdf_stream = io.BytesIO(pdf_bytes)
         reader = PdfReader(pdf_stream)
 
-        job = Job(file_name=file.filename or "bill.pdf", num_pages=len(reader.pages))
+        job = Job(file_name=file.filename or "bill.pdf", num_pages=len(reader.pages), status="success")
         session.add(job)
         
         # Extract text from each page

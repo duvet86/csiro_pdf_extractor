@@ -2,14 +2,23 @@ import type { Route } from "./+types/root";
 
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "react-router";
 
 import "./app.css";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "New React Router App" },
+    { name: "description", content: "Welcome to React Router!" },
+  ];
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +30,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div className="drawer lg:drawer-open">
+          <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+          <main className="drawer-content m-2">{children}</main>
+          <div className="drawer-side">
+            <label
+              htmlFor="my-drawer-3"
+              aria-label="close sidebar"
+              className="drawer-overlay"
+            ></label>
+            <ul className="menu bg-base-200 min-h-full w-80 p-4">
+              {/* Sidebar content here */}
+              <li>
+                <NavLink to="/">Home</NavLink>
+              </li>
+              <li>
+                <NavLink to="/summary">Job Summary</NavLink>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <ScrollRestoration />
         <Scripts />
       </body>

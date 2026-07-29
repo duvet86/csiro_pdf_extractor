@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 
-import { Form } from "react-router";
+import { Form, redirect } from "react-router";
 
 interface ResponseData {
   filename: string;
@@ -8,17 +8,23 @@ interface ResponseData {
   content: string;
 }
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
-
 export async function action({ request }: Route.ActionArgs) {
-  const resp = await fetch("http://127.0.0.1:8000/advanced-extraction", {
+  const formData = await request.formData();
+
+  const extractionType = formData.get("extractionType");
+  const url = !extractionType ? "simple-extraction" : "advanced-extraction";
+
+  console.log("Has file:");
+
+  if (!formData.get("file") || (formData.get("file") as File).size === 0) {
+    return {
+      message: "File is required",
+    };
+  }
+
+  const resp = await fetch(`http://127.0.0.1:8000/${url}`, {
     method: "POST",
-    body: await request.formData(),
+    body: formData,
   });
 
   if (!resp.ok) {
@@ -32,33 +38,29 @@ export async function action({ request }: Route.ActionArgs) {
 
   console.log("Response data:", data);
 
-  return {
-    data,
-  };
+  return redirect("/summary");
 }
 
-export default function Index({ actionData }: Route.ComponentProps) {
+export default function Index() {
   return (
     <main>
       <Form method="post" encType="multipart/form-data">
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend className="fieldset-legend">Page details</legend>
+          <legend className="fieldset-legend">Extract Data</legend>
 
-          <label className="label">Title</label>
-          <input type="file" name="file" className="file-input" />
+          <label className="label mb-4">
+            <input type="checkbox" className="toggle" name="extractionType" />
+            Advanced Extraction
+          </label>
 
-          <button className="btn" type="submit">
+          <label className="label">Upload a Bill</label>
+          <input type="file" name="file" className="file-input" required />
+
+          <button className="btn btn-primary mt-4" type="submit">
             Submit
           </button>
         </fieldset>
       </Form>
-
-      {actionData?.data && (
-        <div>
-          <p>Filename: {actionData.data.filename}</p>
-          <p>Total Pages: {actionData.data.total_pages}</p>
-        </div>
-      )}
     </main>
   );
 }
