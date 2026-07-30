@@ -25,7 +25,7 @@ async def extract_pdf_fields_docling(session: SessionDep, background_tasks: Back
         )
 
     try:
-        job = Job(file_name=file.filename or "bill.pdf", num_pages=0, status="pending")
+        job = Job(file_name=file.filename or "bill.pdf", num_pages=0, extraction_mode = "advanced", status="pending")
 
         session.add(job)
         session.commit()

@@ -5,6 +5,7 @@ interface Job {
   id: string;
   file_name: string;
   num_pages: number;
+  extraction_mode: string;
   status: string;
 }
 
@@ -37,6 +38,7 @@ export default function Index({ loaderData: { jobs } }: Route.ComponentProps) {
               <th></th>
               <th>File Name</th>
               <th>Number of Pages</th>
+              <th>Extraction Mode</th>
               <th>Status</th>
               <th>Details</th>
             </tr>
@@ -47,6 +49,7 @@ export default function Index({ loaderData: { jobs } }: Route.ComponentProps) {
                 <th>{index + 1}</th>
                 <td>{job.file_name}</td>
                 <td>{job.num_pages}</td>
+                <td>{job.extraction_mode}</td>
                 <td>{job.status}</td>
                 <td>
                   {job.status === "success" ? (

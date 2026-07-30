@@ -27,7 +27,7 @@ async def extract_pdf_text(session: SessionDep, file: UploadFile = File(...)):
         pdf_stream = io.BytesIO(pdf_bytes)
         reader = PdfReader(pdf_stream)
 
-        job = Job(file_name=file.filename or "bill.pdf", num_pages=len(reader.pages), status="success")
+        job = Job(file_name=file.filename or "bill.pdf", num_pages=len(reader.pages), extraction_mode = "simple", status="success")
         session.add(job)
         
         # Extract text from each page

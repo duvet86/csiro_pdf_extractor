@@ -30,7 +30,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <div className="drawer lg:drawer-open">
+        <div className="drawer drawer-open">
           <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
           <main className="drawer-content m-2">{children}</main>
           <div className="drawer-side">

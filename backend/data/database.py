@@ -9,6 +9,7 @@ class Job(SQLModel, table=True):
     file_name: str
     num_pages: int | None = Field(default=None)
     status: str
+    extraction_mode: str
 
     created_datetime: datetime | None = Field(default=None, sa_column=Column(
         TIMESTAMP(timezone=True),

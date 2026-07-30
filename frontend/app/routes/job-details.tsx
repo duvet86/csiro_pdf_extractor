@@ -5,6 +5,7 @@ interface Job {
   file_name: string;
   num_pages: number;
   status: string;
+  extraction_mode: string;
   created_datetime: string;
   updated_datetime: string;
   extracted_data: {
@@ -38,6 +39,10 @@ export default function Index({ loaderData: { job } }: Route.ComponentProps) {
   return (
     <main className="p-4">
       <h1>{job.file_name}</h1>
+      <p>Number of Pages: {job.num_pages}</p>
+      <p>Extraction Mode: {job.extraction_mode}</p>
+      <p>Status: {job.status}</p>
+      <p>Created At: {job.created_datetime}</p>
       <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 p-4 mt-2">
         <table className="table">
           {/* head */}

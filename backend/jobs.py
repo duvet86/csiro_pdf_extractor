@@ -29,6 +29,8 @@ def read_job(job_id: int, session: SessionDep):
         "id": job.id,
         "file_name": job.file_name,
         "num_pages": job.num_pages,
+        "extraction_mode": job.extraction_mode,
+        "status": job.status,
         "created_datetime": job.created_datetime,
         "updated_datetime": job.updated_datetime,
         "extracted_data": [
