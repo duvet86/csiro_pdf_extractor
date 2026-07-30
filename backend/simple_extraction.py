@@ -5,14 +5,12 @@ from pypdf import PdfReader
 
 from data.database import Job, ExtractedData, SessionDep
 
-# Initialize the router with specific configuration (optional)
 router = APIRouter(
     prefix="/simple-extraction"
 )
 
 @router.post("")
 async def extract_pdf_text(session: SessionDep, file: UploadFile = File(...)):
-    # Validate that the uploaded file is actually a PDF
     if file.content_type != "application/pdf":
         raise HTTPException(
             status_code=400, 
@@ -20,17 +18,14 @@ async def extract_pdf_text(session: SessionDep, file: UploadFile = File(...)):
         )
     
     try:
-        # Read the file contents into memory as bytes
         pdf_bytes = await file.read()
         
-        # Convert bytes to a stream that pypdf can read
         pdf_stream = io.BytesIO(pdf_bytes)
         reader = PdfReader(pdf_stream)
 
         job = Job(file_name=file.filename or "bill.pdf", num_pages=len(reader.pages), extraction_mode = "simple", status="success")
         session.add(job)
         
-        # Extract text from each page
         for page_num, page in enumerate(reader.pages, start=1):
             text = page.extract_text()
             extracted_data = _extract_pdf_key_fields(text)

@@ -23,7 +23,6 @@ def main():
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
-    # Optional: Validate file extension or MIME type
     if file.content_type not in ["image/jpeg", "image/png", "application/pdf"]:
         raise HTTPException(status_code=400, detail="Invalid file type.")
         

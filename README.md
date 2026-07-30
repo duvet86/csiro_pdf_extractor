@@ -88,3 +88,8 @@ CDN / Load Balancer
 ```
 
 All resources provisioned via Bicep files in a Virual Private network; participant identity managed by an OIDC provider, with JWT validation middleware on the FastAPI layer.
+
+## AI Assistance
+
+I used AI tools, including GitHub Copilot and ChatGPT, for educational and learning purposes. They helped me understand the document extraction libraries and develop the regular expressions used to extract data in the "Simple" processing method.
+I generally prefer AI as a learning tool rather than an automated code generator. I often find AI-generated code overwhelming, so I prefer having the tools explain concepts, generate examples, and suggest code snippets that I can review and integrate manually, rather than allowing them to directly modify project files.
