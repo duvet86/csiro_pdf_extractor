@@ -47,6 +47,7 @@ npm run dev
 - Upload an energy bill PDF file. You can select across 2 different modes, simple and advanced.
 - Simple mode extracts the data "synchronously" and redirects the user to the summary page.
 - Advanced extracts the data "asynchronously" using a background job. The extration might take minutes depending on the server capacity and file size. The user is redirected to the summarty page and the job status is set as pending. Currently, the page does not automatically updates when the background job completes. To view the results, the user needs to refresh the page manually.
+- You can click on "Job Sumamry" to view two example extraction jobs demonstrating the two processing methods.
 
 ## Running at Scale for Real Participants
 
